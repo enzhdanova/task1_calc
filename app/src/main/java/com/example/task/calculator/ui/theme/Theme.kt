@@ -18,7 +18,7 @@ private val LightColorPalette = lightColors(
         primaryVariant = MainBody,
         secondary = ButtonOperation,
     onSecondary = Color.Black,
-    onBackground = Color.Black,
+    onBackground = Color.Black
 
         /* Other default colors to override
     background = Color.White,

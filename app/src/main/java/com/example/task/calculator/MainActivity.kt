@@ -1,6 +1,7 @@
 package com.example.task.calculator
 
 import android.os.Bundle
+import android.text.style.LineHeightSpan
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.task.calculator.ui.theme.TaskCalculatorTheme
@@ -24,30 +26,36 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskCalculatorTheme {
                 // A surface container using the 'background' color from the theme
-               mainScreen()
+               MainScreen()
             }
         }
     }
 }
 
 @Composable
-fun mainScreen(){
+fun MainScreen(){
     Surface() {
-        Column(modifier = Modifier.padding(24.dp )) {
-            title()
-            screen("0")
-            buttonsBody()
+        Column(modifier = Modifier.padding(top = 20.dp, start = 24.dp, end = 24.dp, bottom = 20.dp)
+            .width(366.dp)
+            .fillMaxHeight()) {
+            Title()
+            Screen("0")
+            Column(
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween) {
+            ButtonsBody()
+            }
         }
     }
 }
 
 @Composable
-fun title() {
-    Text(text = "Сalculator", Modifier.height(34.dp), style = TextStyle(fontSize = 28.sp))
+fun Title() {
+    Text(text = "Сalculator", Modifier.padding(bottom = 20.dp).height(34.dp), style = TextStyle(fontSize = 28.sp))
 }
 
 @Composable
-fun screen(number: String){
+fun Screen(number: String){
     Box(modifier = Modifier
         .size(width = 366.dp, height = 100.dp)) {
         Image(painter = painterResource(id = R.drawable.rectangle_calc),
@@ -62,36 +70,41 @@ fun screen(number: String){
 }
 
 @Composable
-fun buttonsBody(){
-    Row() {
-        Column() {
-            Row() {
-                for (el in CalcScreen.calcFun) {
-                    buttonsWhite(text = el.title)
-                }
-            }
-            for (el in CalcScreen.numbers) {
-                Row() {
-                    for (el_num in el) {
-                        buttonsWhite(text = el_num.title)
-                    }
-                }
-            }
+fun ButtonsBody(){
+    var size = 80.dp
+    Row(modifier = Modifier.padding(top = 25.dp).fillMaxWidth(),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement  =  Arrangement.SpaceBetween) {
+        for (el in CalcScreen.calcFun) {
+            ButtonsWhite(text = el.title, size)
         }
+        val el = CalcScreen.mathOperations[0]
+        ButtonsBlue(text = el.title)
+    }
 
-        Column() {
-            for (el in CalcScreen.mathOperations) {
-                buttonsBlue(text = el.title)
+    var index = 1
+    for (el in CalcScreen.numbers) {
+        Row(modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement  =  Arrangement.SpaceBetween) {
+            for (el_num in el) {
+
+                if (el_num.title.equals("0")) {
+                    size = 175.dp
+                } else { size = 80.dp}
+                ButtonsWhite(text = el_num.title, size)
             }
+            val el = CalcScreen.mathOperations[index]
+            ButtonsBlue(text = el.title)
+            index++
         }
     }
 }
 
 @Composable
-fun buttonsWhite(text: String){
+fun ButtonsWhite(text: String, height: Dp){
     Button(onClick = { /*TODO*/ },
-        modifier = Modifier
-            .size(80.dp),
+        modifier = Modifier.width(height).height(80.dp),
         shape = RoundedCornerShape(20),
         elevation =  ButtonDefaults.elevation(
             defaultElevation = 10.dp,
@@ -104,12 +117,17 @@ fun buttonsWhite(text: String){
 }
 
 @Composable
-fun buttonsBlue(text: String){
+fun ButtonsBlue(text: String){
     Button(onClick = { /*TODO*/ },
         modifier = Modifier
             .size(80.dp),
         shape = RoundedCornerShape(20),
-        colors =  ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors =  ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+        elevation =  ButtonDefaults.elevation(
+            defaultElevation = 10.dp,
+            pressedElevation = 15.dp,
+            disabledElevation = 0.dp
+        )
     ){
         Text(text = text, style = TextStyle(color = Color.Black, fontSize = 29.sp))
     }
@@ -119,6 +137,6 @@ fun buttonsBlue(text: String){
 @Composable
 fun DefaultPreview() {
     TaskCalculatorTheme {
-        mainScreen()
+        MainScreen()
     }
 }
