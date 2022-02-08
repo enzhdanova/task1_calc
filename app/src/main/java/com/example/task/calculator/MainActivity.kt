@@ -1,17 +1,16 @@
 package com.example.task.calculator
 
 import android.os.Bundle
-import android.text.style.LineHeightSpan
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,8 +24,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TaskCalculatorTheme {
-                // A surface container using the 'background' color from the theme
-               MainScreen()
+                Surface {
+                    MainScreen()
+                }
             }
         }
     }
@@ -34,24 +34,47 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(){
-    Surface() {
-        Column(modifier = Modifier.padding(top = 20.dp, start = 24.dp, end = 24.dp, bottom = 20.dp)
-            .width(366.dp)
-            .fillMaxHeight()) {
-            Title()
-            Screen("0")
-            Column(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween) {
-            ButtonsBody()
+
+    var currentValue = remember { mutableStateOf("0") }
+    var calcState = remember {
+        mutableStateOf(CulcState("0","", "+"))
+    }
+
+    Column(modifier = Modifier
+        .padding(top = 18.dp, start = 24.dp, end = 24.dp, bottom = 18.dp)
+        .fillMaxSize()) {
+        Title()
+        Screen(calcState.value.tmp)
+        Spacer(modifier = Modifier.height(20.dp))
+        //buttons
+        Row {
+            Column{
+                OperationButtonGroup()
+                Spacer(modifier = Modifier.height(15.dp))
+                NumbersButton {
+                    var tmp = calcState.value.tmp
+                    if (tmp == "" || tmp == "0") {
+                        tmp = it
+                    } else {
+                        tmp +=it
+                    }
+                    calcState.value = calcState.value.copy(tmp = tmp)
+                }
+            }
+            Column {
+                MathOperation()
             }
         }
     }
+
 }
 
 @Composable
 fun Title() {
-    Text(text = "Сalculator", Modifier.padding(bottom = 20.dp).height(34.dp), style = TextStyle(fontSize = 28.sp))
+    Text(text = "Calculator",
+        Modifier
+            .padding(bottom = 15.dp)
+            .height(34.dp), style = TextStyle(fontSize = 28.sp))
 }
 
 @Composable
@@ -69,68 +92,48 @@ fun Screen(number: String){
     }
 }
 
+
 @Composable
-fun ButtonsBody(){
-    var size = 80.dp
-    Row(modifier = Modifier.padding(top = 25.dp).fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement  =  Arrangement.SpaceBetween) {
-        for (el in CalcScreen.calcFun) {
-            ButtonsWhite(text = el.title, size)
-        }
-        val el = CalcScreen.mathOperations[0]
-        ButtonsBlue(text = el.title)
-    }
-
-    var index = 1
-    for (el in CalcScreen.numbers) {
-        Row(modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement  =  Arrangement.SpaceBetween) {
-            for (el_num in el) {
-
-                if (el_num.title.equals("0")) {
-                    size = 175.dp
-                } else { size = 80.dp}
-                ButtonsWhite(text = el_num.title, size)
-            }
-            val el = CalcScreen.mathOperations[index]
+fun MathOperation(){
+    Column(modifier = Modifier
+        .width(80.dp)
+        ) {
+        for (el in CalcScreen.mathOperations){
             ButtonsBlue(text = el.title)
-            index++
+            Spacer(modifier = Modifier.height(15.dp))
         }
     }
 }
 
 @Composable
-fun ButtonsWhite(text: String, height: Dp){
-    Button(onClick = { /*TODO*/ },
-        modifier = Modifier.width(height).height(80.dp),
-        shape = RoundedCornerShape(20),
-        elevation =  ButtonDefaults.elevation(
-            defaultElevation = 10.dp,
-            pressedElevation = 15.dp,
-            disabledElevation = 0.dp
-        )
-    ){
-        Text(text = text, style = TextStyle(color = Color.Black, fontSize = 29.sp))
+fun OperationButtonGroup(){
+    var size = 80.dp
+    Row {
+        for (caclFun in CalcScreen.calcFun) {
+
+            ButtonsWhite(text = caclFun.title, size, {})
+            Spacer(modifier = Modifier.width(15.dp))
+        }
     }
 }
 
 @Composable
-fun ButtonsBlue(text: String){
-    Button(onClick = { /*TODO*/ },
-        modifier = Modifier
-            .size(80.dp),
-        shape = RoundedCornerShape(20),
-        colors =  ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-        elevation =  ButtonDefaults.elevation(
-            defaultElevation = 10.dp,
-            pressedElevation = 15.dp,
-            disabledElevation = 0.dp
-        )
-    ){
-        Text(text = text, style = TextStyle(color = Color.Black, fontSize = 29.sp))
-    }
+fun NumbersButton(printNumber: (String) -> Unit){
+   var size: Dp
+   for (el_num in CalcScreen.numbers) {
+       Row {
+           for (el in el_num ){
+               size = if (el.title == "0") {
+                   175.dp
+               } else {
+                   80.dp
+               }
+               ButtonsWhite(text = el.title, size, printNumber)
+               Spacer(modifier = Modifier.width(15.dp))
+           }
+       }
+       Spacer(modifier = Modifier.height(15.dp))
+   }
 }
 
 @Preview(showBackground = true)

@@ -35,3 +35,9 @@ object CalcScreen {
 }
 
 data class CalcContent( val title: String)
+
+data class OpMath(val operationMath: () -> Double)
+
+fun printNumbers(){
+
+}
