@@ -62,7 +62,40 @@ fun MainScreen(){
                 }
             }
             Column {
-                MathOperation()
+                MathOperation {
+                    val tmp = calcState.value.tmp.toDouble()
+                    var result = calcState.value.result.toDouble()
+                    when (calcState.value.mathOperation) {
+                        "+" -> {
+                           result +=tmp
+                            println(calcState.value)
+                        }
+                        "-" -> {
+                            result -=tmp
+                            println(calcState.value)
+                        }
+                        "*" -> {
+                            result *=tmp
+                            println(calcState.value)
+                        }
+                        "/" -> {
+                            result /=tmp
+                            println(calcState.value)
+                        }
+                    }
+
+                    if (it == "=") {
+                        calcState.value =
+                            calcState.value.copy(tmp = result.toString(), result = "0", mathOperation = "+")
+                    } else {
+                        calcState.value =
+                            calcState.value.copy(
+                                tmp = "",
+                                result = result.toString(),
+                                mathOperation = it
+                            )
+                    }
+                }
             }
         }
     }
@@ -94,12 +127,12 @@ fun Screen(number: String){
 
 
 @Composable
-fun MathOperation(){
+fun MathOperation(mattOp: (String) -> Unit){
     Column(modifier = Modifier
         .width(80.dp)
         ) {
         for (el in CalcScreen.mathOperations){
-            ButtonsBlue(text = el.title)
+            ButtonsBlue(text = el.title, mattOp)
             Spacer(modifier = Modifier.height(15.dp))
         }
     }
