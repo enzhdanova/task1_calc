@@ -37,7 +37,7 @@ fun MainScreen(){
 
     var currentValue = remember { mutableStateOf("0") }
     var calcState = remember {
-        mutableStateOf(CulcState("0","", "+"))
+        mutableStateOf(CalcState("0","", "+"))
     }
 
     Column(modifier = Modifier
@@ -63,38 +63,26 @@ fun MainScreen(){
             }
             Column {
                 MathOperation {
-                    val tmp = calcState.value.tmp.toDouble()
-                    var result = calcState.value.result.toDouble()
-                    when (calcState.value.mathOperation) {
-                        "+" -> {
-                           result +=tmp
-                            println(calcState.value)
-                        }
-                        "-" -> {
-                            result -=tmp
-                            println(calcState.value)
-                        }
-                        "*" -> {
-                            result *=tmp
-                            println(calcState.value)
-                        }
-                        "/" -> {
-                            result /=tmp
-                            println(calcState.value)
-                        }
+                    var result = calcState.value.result
+                    if (calcState.value.tmp != ""){
+                        result = getResultMathOperation(
+                            calcState.value.result,
+                            calcState.value.tmp,
+                            calcState.value.mathOperation
+                        )
+                        println("$result  $it")
                     }
+                        val calcStateTmp =
+                            checkAndReturnResult(nowMathOperation = it, result = result)
+                        println(calcStateTmp)
+                        calcState.value = calcState.value.copy(
+                            tmp = calcStateTmp.tmp,
+                            result = calcStateTmp.result,
+                            mathOperation = calcStateTmp.mathOperation
+                        )
+                        println(calcState)
 
-                    if (it == "=") {
-                        calcState.value =
-                            calcState.value.copy(tmp = result.toString(), result = "0", mathOperation = "+")
-                    } else {
-                        calcState.value =
-                            calcState.value.copy(
-                                tmp = "",
-                                result = result.toString(),
-                                mathOperation = it
-                            )
-                    }
+
                 }
             }
         }

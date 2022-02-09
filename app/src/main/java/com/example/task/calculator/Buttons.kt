@@ -36,7 +36,8 @@ fun ButtonsWhite(text: String, height: Dp, funCalc: (String) -> Unit){
 
 @Composable
 fun ButtonsBlue(text: String, operaton: (String)->Unit){
-    Button(onClick = { operaton(text) },
+    Button(onClick = { operaton(text)
+        println(text)},
         modifier = Modifier
             .size(80.dp),
         shape = RoundedCornerShape(20),
