@@ -43,4 +43,12 @@ data class CalcState(
 
         return newNumber
     }
+
+    fun changeSign(): String{
+        return if (tmp.contains("-")){
+            tmp.replace("-","")
+        } else {
+            "-$tmp"
+        }
+    }
 }

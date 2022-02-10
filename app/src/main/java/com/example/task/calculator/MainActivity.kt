@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -35,8 +34,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(){
-
-    var currentValue = remember { mutableStateOf("0") }
     var calcState = remember {
         mutableStateOf(CalcState("0","", "+"))
     }
@@ -50,7 +47,24 @@ fun MainScreen(){
         //buttons
         Row {
             Column{
-                OperationButtonGroup()
+                Row {
+                    ButtonsWhite(text = "AC", 80.dp) {
+                        calcState.value =
+                            calcState.value.copy(tmp = "", result = "0", mathOperation = "+")
+                    }
+                    Spacer(modifier = Modifier.width(15.dp))
+                    ButtonsWhite(text = "+/-", 80.dp){
+                        var tmp = calcState.value.changeSign()
+                        calcState.value = calcState.value.copy(tmp = tmp)
+                    }
+                    Spacer(modifier = Modifier.width(15.dp))
+                    ButtonsWhite(text = "%", 80.dp) {
+                        val tmp = calcState.value.tmp.toDouble()/100
+                        calcState.value =
+                            calcState.value.copy(tmp = tmp.toString(), result = "0", mathOperation = "+")
+                    }
+                    Spacer(modifier = Modifier.width(15.dp))
+                }
                 Spacer(modifier = Modifier.height(15.dp))
                 NumbersButton {
                     calcState.value = calcState.value.copy(tmp = calcState.value.getNewNumber(it))
@@ -62,7 +76,7 @@ fun MainScreen(){
                     if (calcState.value.tmp != ""){
                         result = calcState.value.getResultMathOperation()
                     }
-                        calcState.value =
+                    calcState.value =
                             calcState.value.returnResultCalcState(nowMathOperation = it, result = result)
                 }
             }
@@ -108,13 +122,15 @@ fun MathOperation(mattOp: (String) -> Unit){
 }
 
 @Composable
-fun OperationButtonGroup(){
+fun OperationButtonGroup(calcState: CalcState){
     var size = 80.dp
     Row {
-        for (caclFun in CalcScreen.calcFun) {
-            ButtonsWhite(text = caclFun.title, size, {})
-            Spacer(modifier = Modifier.width(15.dp))
-        }
+        ButtonsWhite(text = "AC", size, {})
+        Spacer(modifier = Modifier.width(15.dp))
+        ButtonsWhite(text = "+/-", size, {})
+        Spacer(modifier = Modifier.width(15.dp))
+        ButtonsWhite(text = "%", size, {})
+        Spacer(modifier = Modifier.width(15.dp))
     }
 }
 
