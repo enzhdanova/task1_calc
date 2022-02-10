@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -52,37 +53,17 @@ fun MainScreen(){
                 OperationButtonGroup()
                 Spacer(modifier = Modifier.height(15.dp))
                 NumbersButton {
-                    var tmp = calcState.value.tmp
-                    if (tmp == "" || tmp == "0") {
-                        tmp = it
-                    } else {
-                        tmp +=it
-                    }
-                    calcState.value = calcState.value.copy(tmp = tmp)
+                    calcState.value = calcState.value.copy(tmp = calcState.value.getNewNumber(it))
                 }
             }
             Column {
                 MathOperation {
                     var result = calcState.value.result
                     if (calcState.value.tmp != ""){
-                        result = getResultMathOperation(
-                            calcState.value.result,
-                            calcState.value.tmp,
-                            calcState.value.mathOperation
-                        )
-                        println("$result  $it")
+                        result = calcState.value.getResultMathOperation()
                     }
-                        val calcStateTmp =
-                            checkAndReturnResult(nowMathOperation = it, result = result)
-                        println(calcStateTmp)
-                        calcState.value = calcState.value.copy(
-                            tmp = calcStateTmp.tmp,
-                            result = calcStateTmp.result,
-                            mathOperation = calcStateTmp.mathOperation
-                        )
-                        println(calcState)
-
-
+                        calcState.value =
+                            calcState.value.returnResultCalcState(nowMathOperation = it, result = result)
                 }
             }
         }
@@ -109,7 +90,7 @@ fun Screen(number: String){
             text = number,  style = TextStyle(fontSize = 40.sp),
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 22.dp, end = 22.dp))
+                .padding(start = 22.dp, end = 22.dp).height(52.dp))
     }
 }
 
@@ -131,7 +112,6 @@ fun OperationButtonGroup(){
     var size = 80.dp
     Row {
         for (caclFun in CalcScreen.calcFun) {
-
             ButtonsWhite(text = caclFun.title, size, {})
             Spacer(modifier = Modifier.width(15.dp))
         }

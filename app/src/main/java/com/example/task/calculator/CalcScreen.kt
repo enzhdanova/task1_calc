@@ -1,8 +1,7 @@
 package com.example.task.calculator
 
 object CalcScreen {
-        // Sample conversation data
-        val calcFun = listOf(
+       val calcFun = listOf(
             CalcContent("AC"),
             CalcContent("+/-"),
             CalcContent("%"),
@@ -35,9 +34,3 @@ object CalcScreen {
 }
 
 data class CalcContent( val title: String)
-
-data class OpMath(val operationMath: () -> Double)
-
-fun printNumbers(){
-
-}
