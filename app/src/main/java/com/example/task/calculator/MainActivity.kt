@@ -4,20 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.task.calculator.ui.theme.TaskCalculatorTheme
+import com.example.task.calculator.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(){
-    var calcState = remember {
+    val calcState = remember {
         mutableStateOf(CalcState("0","", "+"))
     }
 
@@ -54,7 +57,7 @@ fun MainScreen(){
                     }
                     Spacer(modifier = Modifier.width(15.dp))
                     ButtonsWhite(text = "+/-", 80.dp){
-                        var tmp = calcState.value.changeSign()
+                        val tmp = calcState.value.changeSign()
                         calcState.value = calcState.value.copy(tmp = tmp)
                     }
                     Spacer(modifier = Modifier.width(15.dp))
@@ -82,7 +85,6 @@ fun MainScreen(){
             }
         }
     }
-
 }
 
 @Composable
@@ -90,21 +92,37 @@ fun Title() {
     Text(text = "Calculator",
         Modifier
             .padding(bottom = 15.dp)
-            .height(34.dp), style = TextStyle(fontSize = 28.sp))
+            .height(34.dp), style = TextStyle(fontSize = 28.sp, fontFamily = TitleFont))
 }
 
 @Composable
 fun Screen(number: String){
+    var backgroundText = "8888888888888"
+    // это сделано для того, чтобы нижний текст тоже скролился и соответствовал при наложении тексту сверху
+    while (backgroundText.length < number.length){
+        backgroundText +="8"
+    }
+
+    val scroll = rememberScrollState(0)
     Box(modifier = Modifier
         .size(width = 366.dp, height = 100.dp)) {
         Image(painter = painterResource(id = R.drawable.rectangle_calc),
             contentDescription = "numbers",
             modifier = Modifier.fillMaxSize())
         Text(
-            text = number,  style = TextStyle(fontSize = 40.sp),
+            text = backgroundText,  style = TextStyle(fontSize = 52.sp, fontFamily = DigitalFont), color = BackgroundNumberColor,
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 22.dp, end = 22.dp).height(52.dp))
+                .padding(start = 22.dp, end = 22.dp)
+                .height(44.dp).horizontalScroll(state = scroll),
+            maxLines = 1)
+        Text(
+            text = number,  style = TextStyle(fontSize = 52.sp, fontFamily = DigitalFont),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 22.dp, end = 22.dp)
+                .height(44.dp).horizontalScroll(scroll),
+            maxLines = 1)
     }
 }
 
@@ -118,19 +136,6 @@ fun MathOperation(mattOp: (String) -> Unit){
             ButtonsBlue(text = el.title, mattOp)
             Spacer(modifier = Modifier.height(15.dp))
         }
-    }
-}
-
-@Composable
-fun OperationButtonGroup(calcState: CalcState){
-    var size = 80.dp
-    Row {
-        ButtonsWhite(text = "AC", size, {})
-        Spacer(modifier = Modifier.width(15.dp))
-        ButtonsWhite(text = "+/-", size, {})
-        Spacer(modifier = Modifier.width(15.dp))
-        ButtonsWhite(text = "%", size, {})
-        Spacer(modifier = Modifier.width(15.dp))
     }
 }
 
