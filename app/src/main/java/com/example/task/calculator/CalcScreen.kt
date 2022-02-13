@@ -2,35 +2,15 @@ package com.example.task.calculator
 
 object CalcScreen {
        val calcFun = listOf(
-            CalcContent("AC"),
-            CalcContent("+/-"),
-            CalcContent("%"),
+            "AC", "+/-", "%",
             )
         val numbers = listOf(
                 listOf(
-                    CalcContent("7"),
-                    CalcContent("8"),
-                    CalcContent("9")),
-                listOf(
-                    CalcContent("4"),
-                    CalcContent("5"),
-                    CalcContent("6")),
-                listOf(
-                    CalcContent("1"),
-                    CalcContent("2"),
-                    CalcContent("3") ),
-                listOf(
-                    CalcContent("0"),
-                    CalcContent(","))
+                    "7", "8", "9"),
+                listOf("4","5","6"),
+                listOf("1", "2", "3" ),
+                listOf("0", ",")
         )
 
-    val mathOperations = listOf(
-        CalcContent("/"),
-        CalcContent("*"),
-        CalcContent("-"),
-        CalcContent("+"),
-        CalcContent("=")
-    )
+    val mathOperations = listOf("/","*","-","+","=")
 }
-
-data class CalcContent( val title: String)
