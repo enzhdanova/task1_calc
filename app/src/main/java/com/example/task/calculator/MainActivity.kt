@@ -3,19 +3,18 @@ package com.example.task.calculator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.task.calculator.component.ButtonCalc
+import com.example.task.calculator.component.Display
+import com.example.task.calculator.component.Title
 import com.example.task.calculator.ui.theme.*
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +31,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(){
+private fun MainScreen(){
     val calcState = remember {
         mutableStateOf(CalcState("0","", "+"))
     }
@@ -40,8 +39,8 @@ fun MainScreen(){
     Column(modifier = Modifier
         .padding(top = 18.dp, start = 24.dp, end = 24.dp, bottom = 18.dp)
         .fillMaxSize()) {
-        Title()
-        Screen(calcState.value.tmp)
+        Title(titleText = R.string.title_calculator)
+        Display(calcState.value.tmp)
         Spacer(modifier = Modifier.height(20.dp))
         //buttons
         Row()
@@ -58,65 +57,29 @@ fun MainScreen(){
 }
 
 @Composable
-fun Title() {
-    Text(text = "Calculator",
-        Modifier
-            .padding(bottom = 15.dp)
-            .height(34.dp), style = TextStyle(fontSize = 28.sp, fontFamily = TitleFont))
-}
-
-@Composable
-fun Screen(number: String){
-    val backgroundText = "8888888888888"
-
-    Box(modifier = Modifier
-        .height(height = 100.dp)
-        .fillMaxWidth()) {
-        Image(painter = painterResource(id = R.drawable.rectangle_calc),
-            contentDescription = "numbers",
-            modifier = Modifier.fillMaxSize())
-        Text(
-            text = backgroundText,
-            style = TextStyle(fontSize = 52.sp, fontFamily = DigitalFont),
-            color = BackgroundNumberColor,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 22.dp, end = 22.dp)
-                .height(44.dp),
-            maxLines = 1)
-        Text(
-            text = number,  style = TextStyle(fontSize = 52.sp, fontFamily = DigitalFont),
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 22.dp, end = 22.dp)
-                .height(44.dp),
-            maxLines = 1)
-    }
-}
-
-@Composable
-fun MathOperation(modifier: Modifier){
+private fun MathOperation(modifier: Modifier){
     Column(modifier = modifier.fillMaxWidth()) {
-        for (el in CalcScreen.mathOperations){
-            ButtonCalc(text = el,
+        for (el in MathOperationConst.values()){
+            ButtonCalc(contentText = el.operation,
                 Modifier
-                    .aspectRatio(1f),  MaterialTheme.colors.secondary, MaterialTheme.colors.primary)
+                    .aspectRatio(1f),  MaterialTheme.colors.secondary,
+                MaterialTheme.colors.primary)
             Spacer(modifier = Modifier.size(15.dp))
         }
     }
 }
 
-
 @Composable
-fun NumbersButton(modifier: Modifier){
+private fun NumbersButton(modifier: Modifier){
     Column(modifier = modifier) {
         for (i in 7 downTo 1 step 3) {
             Row {
                 for (j in i..(i+2)){
-                    ButtonCalc(text = j.toString(),
+                    ButtonCalc(contentText = j.toString(),
                         Modifier
                             .weight(1.6f)
-                            .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
+                            .aspectRatio(1f),
+                        MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
                     Spacer(modifier = Modifier.weight(0.3f))
                 }
             }
@@ -126,19 +89,19 @@ fun NumbersButton(modifier: Modifier){
 }
 
 @Composable
-fun CalcOperation(modifier: Modifier){
+private fun CalcOperation(modifier: Modifier){
     Row(modifier = modifier){
-        ButtonCalc(text = "AC",
+        ButtonCalc(contentText = stringResource(R.string.button_ac),
             Modifier
                 .weight(1.6f)
                 .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
         Spacer(modifier = Modifier.weight(0.3f))
-        ButtonCalc(text = "+/-",
+        ButtonCalc(contentText = stringResource(R.string.button_sign),
             Modifier
                 .weight(1.6f)
                 .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
         Spacer(modifier = Modifier.weight(0.3f))
-        ButtonCalc(text = "%",
+        ButtonCalc(contentText = stringResource(R.string.button_percent),
             Modifier
                 .weight(1.6f)
                 .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
@@ -148,14 +111,14 @@ fun CalcOperation(modifier: Modifier){
 }
 
 @Composable
-fun ZeroAndComma(modifier: Modifier){
+private fun ZeroAndComma(modifier: Modifier){
     Row(modifier = modifier){
-        ButtonCalc(text = "0",
+        ButtonCalc(contentText = stringResource(R.string.button_zero),
             Modifier
                 .weight(3.5f)
                 .aspectRatio(2.1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
         Spacer(modifier = Modifier.weight(0.3f))
-        ButtonCalc(text = ",",
+        ButtonCalc(contentText = stringResource(R.string.button_comma),
             Modifier
                 .weight(1.6f)
                 .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TaskCalculator</string>
+    <string name="backgroundText">8888888888888</string>
+    <string name="title_calculator">Calculator</string>
+    <string name="button_ac">AC</string>
+    <string name="button_sign">+/-</string>
+    <string name="button_percent">%</string>
+    <string name="button_zero">0</string>
+    <string name="button_comma">,</string>
 </resources>

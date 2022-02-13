@@ -19,30 +19,31 @@ val TitleFont = FontFamily(
 val ButtonFont = FontFamily(
         Font(R.font.montserrat_regular)
 )
-// Set of Material typography styles to start with
+
 val Typography = Typography(
         body1 = TextStyle(
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp
         ),
-        body2 = TextStyle(
+        caption = TextStyle(
                 fontFamily = DigitalFont,
                 fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
-        )
+                fontSize = 52.sp
+        ),
 
-/* Other default text styles to override
-button = TextStyle(
-fontFamily = FontFamily.Default,
-fontWeight = FontWeight.W500,
-fontSize = 14.sp
-),
-caption = TextStyle(
-fontFamily = FontFamily.Default,
-fontWeight = FontWeight.Normal,
-fontSize = 12.sp
-)
-*/
+        button = TextStyle(
+        fontFamily = ButtonFont,
+        fontWeight = FontWeight.W500,
+        fontSize = 29.sp
+        ),
+
+        h1 = TextStyle(
+                fontFamily = TitleFont,
+                fontWeight = FontWeight.W500,
+                fontSize = 28.sp
+        ),
+
+
 )
 
