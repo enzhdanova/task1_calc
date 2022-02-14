@@ -14,18 +14,16 @@ import com.example.task.calculator.R
 import com.example.task.calculator.ui.theme.TaskCalculatorTheme
 
 @Composable
-fun Title(@StringRes titleText: Int) {
+fun Title(@StringRes titleText: Int, modifier: Modifier) {
     Text(text = stringResource(id = titleText),
-        Modifier
-            .padding(bottom = 15.dp)
-            .height(34.dp), style = MaterialTheme.typography.h1)
+        modifier = modifier, style = MaterialTheme.typography.h1)
 }
 
 @Preview
 @Composable
-fun TitlePreview(){
+private fun TitlePreview(){
     TaskCalculatorTheme {
-        Title(titleText = R.string.title_calculator)
+        Title(titleText = R.string.title_calculator, Modifier.padding(bottom = 15.dp).height(34.dp))
     }
 }
 

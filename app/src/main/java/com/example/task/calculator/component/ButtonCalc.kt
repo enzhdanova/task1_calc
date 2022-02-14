@@ -35,7 +35,7 @@ fun ButtonCalc(contentText: String, modifier: Modifier, backgroundColor: Color, 
 
 @Preview
 @Composable
-fun ButtonCalcPreview() {
+private fun ButtonCalcPreview() {
     TaskCalculatorTheme {
         ButtonCalc(contentText = stringResource(id = R.string.button_zero),
             modifier = Modifier.size(80.dp),

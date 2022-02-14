@@ -39,10 +39,9 @@ private fun MainScreen(){
     Column(modifier = Modifier
         .padding(top = 18.dp, start = 24.dp, end = 24.dp, bottom = 18.dp)
         .fillMaxSize()) {
-        Title(titleText = R.string.title_calculator)
-        Display(calcState.value.tmp)
+        Title(titleText = R.string.title_calculator, Modifier.padding(bottom = 15.dp).height(34.dp))
+        Display(calcState.value.tmp, Modifier.fillMaxWidth().height(100.dp))
         Spacer(modifier = Modifier.height(20.dp))
-        //buttons
         Row()
         {
             Column(Modifier.weight(5.7f)) {
@@ -107,7 +106,6 @@ private fun CalcOperation(modifier: Modifier){
                 .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
         Spacer(modifier = Modifier.weight(0.3f))
     }
-
 }
 
 @Composable
@@ -128,7 +126,7 @@ private fun ZeroAndComma(modifier: Modifier){
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+private fun DefaultPreview() {
     TaskCalculatorTheme {
         MainScreen()
     }

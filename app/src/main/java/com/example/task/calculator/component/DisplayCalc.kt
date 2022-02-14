@@ -17,10 +17,8 @@ import com.example.task.calculator.R
 import com.example.task.calculator.ui.theme.TaskCalculatorTheme
 
 @Composable
-fun Display(number: String){
-    Box(modifier = Modifier
-        .height(height = 100.dp)
-        .fillMaxWidth()) {
+fun Display(number: String, modifier: Modifier){
+    Box(modifier = modifier) {
         Image(painter = painterResource(id = R.drawable.rectangle_calc),
             contentDescription = "numbers",
             modifier = Modifier.fillMaxSize())
@@ -45,10 +43,10 @@ fun Display(number: String){
 
 @Preview
 @Composable
-fun ScreenCalcPreview() {
+private fun displayCalcPreview() {
     TaskCalculatorTheme {
         Surface(Modifier.width(366.dp)) {
-            Display(number = stringResource(id = R.string.button_zero))
+            Display(number = stringResource(id = R.string.button_zero), Modifier.height(100.dp).fillMaxWidth())
         }
     }
 }
