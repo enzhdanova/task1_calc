@@ -7,4 +7,5 @@
     <string name="button_percent">%</string>
     <string name="button_zero">0</string>
     <string name="button_comma">,</string>
+    <string name="zero_tmp">0</string>
 </resources>

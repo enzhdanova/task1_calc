@@ -18,8 +18,10 @@ import com.example.task.calculator.R
 import com.example.task.calculator.ui.theme.TaskCalculatorTheme
 
 @Composable
-fun ButtonCalc(contentText: String, modifier: Modifier, backgroundColor: Color, textColor: Color){
-    Button(onClick = {},
+fun ButtonCalc(contentText: String, modifier: Modifier,
+               backgroundColor: Color, textColor: Color,
+                onClick: () -> Unit){
+    Button(onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(backgroundColor),
@@ -40,6 +42,6 @@ private fun ButtonCalcPreview() {
         ButtonCalc(contentText = stringResource(id = R.string.button_zero),
             modifier = Modifier.size(80.dp),
             backgroundColor = MaterialTheme.colors.primary,
-            textColor = MaterialTheme.colors.secondary)
+            textColor = MaterialTheme.colors.secondary, {})
     }
 }

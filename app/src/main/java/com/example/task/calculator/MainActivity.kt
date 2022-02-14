@@ -36,19 +36,38 @@ private fun MainScreen(){
         mutableStateOf(CalcState("0","", "+"))
     }
 
+    var nowNumber = remember {
+        mutableStateOf("")
+    }
+
     Column(modifier = Modifier
         .padding(top = 18.dp, start = 24.dp, end = 24.dp, bottom = 18.dp)
         .fillMaxSize()) {
-        Title(titleText = R.string.title_calculator, Modifier.padding(bottom = 15.dp).height(34.dp))
-        Display(calcState.value.tmp, Modifier.fillMaxWidth().height(100.dp))
+        Title(titleText = R.string.title_calculator,
+            Modifier
+                .padding(bottom = 15.dp)
+                .height(34.dp))
+        Display(nowNumber.value,
+            Modifier
+                .fillMaxWidth()
+                .height(100.dp))
         Spacer(modifier = Modifier.height(20.dp))
         Row()
         {
             Column(Modifier.weight(5.7f)) {
-                CalcOperation(modifier = Modifier.fillMaxWidth())
+                SupportCalcOperation(modifier = Modifier.fillMaxWidth()) {
+                    nowNumber.value = getDisplayContent(nowNumber.value, it)
+                    nowNumber.value
+                }
                 Spacer(modifier = Modifier.size(15.dp))
-                NumbersButton(modifier = Modifier.fillMaxWidth())
-                ZeroAndComma(modifier = Modifier.fillMaxWidth())
+                NumbersButton(modifier = Modifier.fillMaxWidth()) {
+                    nowNumber.value = getNewNumber(nowNumber.value, it)
+                    nowNumber.value
+                }
+                ZeroAndComma(modifier = Modifier.fillMaxWidth()) {
+                    nowNumber.value = getNewNumber(nowNumber.value, it)
+                    nowNumber.value
+                }
             }
             MathOperation(modifier = Modifier.weight(1.6f))
         }
@@ -58,18 +77,18 @@ private fun MainScreen(){
 @Composable
 private fun MathOperation(modifier: Modifier){
     Column(modifier = modifier.fillMaxWidth()) {
-        for (el in MathOperationConst.values()){
+        for (el in MathOperationEnum.values()){
             ButtonCalc(contentText = el.operation,
                 Modifier
                     .aspectRatio(1f),  MaterialTheme.colors.secondary,
-                MaterialTheme.colors.primary)
+                MaterialTheme.colors.primary, {})
             Spacer(modifier = Modifier.size(15.dp))
         }
     }
 }
 
 @Composable
-private fun NumbersButton(modifier: Modifier){
+private fun NumbersButton(modifier: Modifier, onClick: (String) -> String){
     Column(modifier = modifier) {
         for (i in 7 downTo 1 step 3) {
             Row {
@@ -78,7 +97,10 @@ private fun NumbersButton(modifier: Modifier){
                         Modifier
                             .weight(1.6f)
                             .aspectRatio(1f),
-                        MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
+                        MaterialTheme.colors.primary, MaterialTheme.colors.secondary,
+                    onClick = {
+                        onClick(j.toString())
+                    })
                     Spacer(modifier = Modifier.weight(0.3f))
                 }
             }
@@ -88,38 +110,41 @@ private fun NumbersButton(modifier: Modifier){
 }
 
 @Composable
-private fun CalcOperation(modifier: Modifier){
+private fun SupportCalcOperation(modifier: Modifier, onClick: (String) -> String){
     Row(modifier = modifier){
-        ButtonCalc(contentText = stringResource(R.string.button_ac),
-            Modifier
-                .weight(1.6f)
-                .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
-        Spacer(modifier = Modifier.weight(0.3f))
-        ButtonCalc(contentText = stringResource(R.string.button_sign),
-            Modifier
-                .weight(1.6f)
-                .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
-        Spacer(modifier = Modifier.weight(0.3f))
-        ButtonCalc(contentText = stringResource(R.string.button_percent),
-            Modifier
-                .weight(1.6f)
-                .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
-        Spacer(modifier = Modifier.weight(0.3f))
+        for (el in SupportOperationEnum.values()) {
+            ButtonCalc(contentText = el.operation,
+                Modifier
+                    .weight(1.6f)
+                    .aspectRatio(1f), MaterialTheme.colors.primary,
+                MaterialTheme.colors.secondary){
+                    onClick(el.operation)
+                }
+            Spacer(modifier = Modifier.weight(0.3f))
+        }
     }
 }
 
 @Composable
-private fun ZeroAndComma(modifier: Modifier){
+private fun ZeroAndComma(modifier: Modifier, onClick: (String) -> String){
+    val zero = stringResource(R.string.button_zero)
+    val comma = stringResource(R.string.button_comma)
     Row(modifier = modifier){
         ButtonCalc(contentText = stringResource(R.string.button_zero),
             Modifier
                 .weight(3.5f)
-                .aspectRatio(2.1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
+                .aspectRatio(2.1f), MaterialTheme.colors.primary,
+                MaterialTheme.colors.secondary) {
+                onClick(zero)
+            }
         Spacer(modifier = Modifier.weight(0.3f))
         ButtonCalc(contentText = stringResource(R.string.button_comma),
             Modifier
                 .weight(1.6f)
-                .aspectRatio(1f), MaterialTheme.colors.primary, MaterialTheme.colors.secondary)
+                .aspectRatio(1f), MaterialTheme.colors.primary,
+                MaterialTheme.colors.secondary) {
+                onClick(comma)
+            }
         Spacer(modifier = Modifier.weight(0.3f))
     }
 }
