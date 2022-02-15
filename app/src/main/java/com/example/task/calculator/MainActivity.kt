@@ -34,12 +34,9 @@ class MainActivity : ComponentActivity() {
 private fun MainScreen(){
     val str_zero = stringResource(id = R.string.zero_tmp)
     val str_add = stringResource(id = R.string.add)
-    val calcState = remember {
-        mutableStateOf(CalcState(str_zero,str_add))
-    }
 
     val result = remember {
-        mutableStateOf("0")
+        mutableStateOf(str_zero)
     }
 
     val nowNumber = remember {
@@ -47,7 +44,7 @@ private fun MainScreen(){
     }
 
     val mathOperation = remember {
-        mutableStateOf("+")
+        mutableStateOf(str_add)
     }
 
     val nextNewDigit = remember {
@@ -70,9 +67,10 @@ private fun MainScreen(){
         {
             Column(Modifier.weight(5.7f)) {
                 SupportCalcOperation(modifier = Modifier.fillMaxWidth()) {
-                    nowNumber.value = getDisplayContent(nowNumber.value, it)
+                    nowNumber.value = Calculator().getDisplayContent(nowNumber.value, it)
                     if (nowNumber.value == ""){
-                        calcState.value = calcState.value.copy("0", "+")
+                        result.value = str_zero
+                        mathOperation.value = str_add
                         nextNewDigit.value = true
                     }
                     nowNumber.value
@@ -83,7 +81,7 @@ private fun MainScreen(){
                         nextNewDigit.value = false
                         nowNumber.value = ""
                     }
-                    nowNumber.value = getNewNumber(nowNumber.value, it)
+                    nowNumber.value = Calculator().getNewNumber(nowNumber.value, it)
                     nowNumber.value
                 }
                 ZeroAndComma(modifier = Modifier.fillMaxWidth()) {
@@ -91,21 +89,20 @@ private fun MainScreen(){
                         nextNewDigit.value = false
                         nowNumber.value = ""
                     }
-                    nowNumber.value = getNewNumber(nowNumber.value, it)
+                    nowNumber.value = Calculator().getNewNumber(nowNumber.value, it)
                     nowNumber.value
                 }
             }
             MathOperation(modifier = Modifier.weight(1.6f)) {
-
                 if (!nextNewDigit.value){
-                    nextNewDigit.value = true
                     nowNumber.value = Calculator()
                         .getResultMathOperation(
-                            calcState.value.result,
+                            result.value,
                             nowNumber.value, mathOperation = mathOperation.value)
-                    calcState.value.result = nowNumber.value
+                    result.value = nowNumber.value
 
                 }
+                nextNewDigit.value = true
                 mathOperation.value = it
                 mathOperation.value
             }
@@ -160,7 +157,7 @@ private fun SupportCalcOperation(modifier: Modifier, onClick: (String) -> String
                     .aspectRatio(1f), MaterialTheme.colors.primary,
                 MaterialTheme.colors.secondary){
                     onClick(el.operation)
-                } // TODO: переделать! АС должно обнулять историю
+                }
             Spacer(modifier = Modifier.weight(0.3f))
         }
     }
