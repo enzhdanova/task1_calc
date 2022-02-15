@@ -32,12 +32,26 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainScreen(){
+    val str_zero = stringResource(id = R.string.zero_tmp)
+    val str_add = stringResource(id = R.string.add)
     val calcState = remember {
-        mutableStateOf(CalcState("0","", "+"))
+        mutableStateOf(CalcState(str_zero,str_add))
     }
 
-    var nowNumber = remember {
+    val result = remember {
+        mutableStateOf("0")
+    }
+
+    val nowNumber = remember {
         mutableStateOf("")
+    }
+
+    val mathOperation = remember {
+        mutableStateOf("+")
+    }
+
+    val nextNewDigit = remember {
+        mutableStateOf(true)
     }
 
     Column(modifier = Modifier
@@ -57,31 +71,58 @@ private fun MainScreen(){
             Column(Modifier.weight(5.7f)) {
                 SupportCalcOperation(modifier = Modifier.fillMaxWidth()) {
                     nowNumber.value = getDisplayContent(nowNumber.value, it)
+                    if (nowNumber.value == ""){
+                        calcState.value = calcState.value.copy("0", "+")
+                        nextNewDigit.value = true
+                    }
                     nowNumber.value
                 }
                 Spacer(modifier = Modifier.size(15.dp))
                 NumbersButton(modifier = Modifier.fillMaxWidth()) {
+                    if (nextNewDigit.value) {
+                        nextNewDigit.value = false
+                        nowNumber.value = ""
+                    }
                     nowNumber.value = getNewNumber(nowNumber.value, it)
                     nowNumber.value
                 }
                 ZeroAndComma(modifier = Modifier.fillMaxWidth()) {
+                    if (nextNewDigit.value) {
+                        nextNewDigit.value = false
+                        nowNumber.value = ""
+                    }
                     nowNumber.value = getNewNumber(nowNumber.value, it)
                     nowNumber.value
                 }
             }
-            MathOperation(modifier = Modifier.weight(1.6f))
+            MathOperation(modifier = Modifier.weight(1.6f)) {
+
+                if (!nextNewDigit.value){
+                    nextNewDigit.value = true
+                    nowNumber.value = Calculator()
+                        .getResultMathOperation(
+                            calcState.value.result,
+                            nowNumber.value, mathOperation = mathOperation.value)
+                    calcState.value.result = nowNumber.value
+
+                }
+                mathOperation.value = it
+                mathOperation.value
+            }
         }
     }
 }
 
 @Composable
-private fun MathOperation(modifier: Modifier){
+private fun MathOperation(modifier: Modifier, onClick: (String) -> String){
     Column(modifier = modifier.fillMaxWidth()) {
         for (el in MathOperationEnum.values()){
             ButtonCalc(contentText = el.operation,
                 Modifier
                     .aspectRatio(1f),  MaterialTheme.colors.secondary,
-                MaterialTheme.colors.primary, {})
+                MaterialTheme.colors.primary){
+                    onClick(el.operation)
+                }
             Spacer(modifier = Modifier.size(15.dp))
         }
     }
@@ -119,7 +160,7 @@ private fun SupportCalcOperation(modifier: Modifier, onClick: (String) -> String
                     .aspectRatio(1f), MaterialTheme.colors.primary,
                 MaterialTheme.colors.secondary){
                     onClick(el.operation)
-                }
+                } // TODO: переделать! АС должно обнулять историю
             Spacer(modifier = Modifier.weight(0.3f))
         }
     }

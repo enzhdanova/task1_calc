@@ -1,10 +1,10 @@
 package com.example.task.calculator
 
 enum class MathOperationEnum(val operation: String) {
-    Add("+"),
-    Sub("-"),
+    Div("/"),
     Mult("*"),
-    Div("-"),
+    Sub("-"),
+    Add("+"),
     Equals("=")
 }
 
