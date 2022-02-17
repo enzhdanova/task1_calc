@@ -1,39 +1,41 @@
 package com.example.task.calculator
 
 class Calculator {
-    fun getResultMathOperation(value1: String, value2: String, mathOperation: String): String{
+    fun getResultMathOperation(
+        value1: String,
+        value2: String,
+        mathOperation: MathOperationEnum
+    ): String {
         val value2Tmp = value2.toDouble()
         var value1Tmp = value1.toDouble()
         when (mathOperation) {
-            "+" -> {
+            MathOperationEnum.Add -> {
                 value1Tmp += value2Tmp
             }
-            "-" -> {
-                value1Tmp -=value2Tmp
+            MathOperationEnum.Sub -> {
+                value1Tmp -= value2Tmp
             }
-            "*" -> {
-                value1Tmp *=value2Tmp
+            MathOperationEnum.Mult -> {
+                value1Tmp *= value2Tmp
             }
-            "/" -> {
-                value1Tmp /=value2Tmp
+            MathOperationEnum.Div -> {
+                value1Tmp /= value2Tmp
             }
-            "=" -> {
+            MathOperationEnum.Equals -> {
                 value1Tmp = value2Tmp
             }
-
         }
-
         return removeExtraZero(value1Tmp.toString())
     }
 
-    fun removeExtraZero(value: String): String{
+    private fun removeExtraZero(value: String): String {
         val regex = Regex(""".+(?=\.0+$)""")
 
         val matchResult = regex.find(value)
-        var result = matchResult?.value ?: value
+        val result = matchResult?.value ?: value
 
         println(matchResult?.value)
-        return  result
+        return result
     }
 
     fun getNewNumber(nowNumber: String, newDigitOrComma: String): String {
@@ -41,8 +43,8 @@ class Calculator {
         when (newDigitOrComma) {
             in "0".."9" ->
                 if (resultNumber != "0") {
-                    resultNumber += newDigitOrComma }
-                else {
+                    resultNumber += newDigitOrComma
+                } else {
                     resultNumber = newDigitOrComma
                 }
             "," ->
@@ -50,19 +52,18 @@ class Calculator {
                     resultNumber += "."
                 }
         }
-
         return resultNumber
     }
 
-    fun changeSign(nowNumber: String): String {
-        return if (nowNumber.contains("-")){
-            nowNumber.replace("-","")
+    private fun changeSign(nowNumber: String): String {
+        return if (nowNumber.contains("-")) {
+            nowNumber.replace("-", "")
         } else {
             "-$nowNumber"
         }
     }
 
-    fun getDisplayContent(nowNumber: String, suppOperation: String): String{
+    fun getDisplayContent(nowNumber: String, suppOperation: String): String {
         var result = ""
         when (suppOperation) {
             "%" -> {
@@ -71,7 +72,6 @@ class Calculator {
             }
             "+/-" -> result = changeSign(nowNumber)
         }
-
         return result
     }
 

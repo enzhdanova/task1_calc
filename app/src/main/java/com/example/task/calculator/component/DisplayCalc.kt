@@ -17,11 +17,13 @@ import com.example.task.calculator.R
 import com.example.task.calculator.ui.theme.TaskCalculatorTheme
 
 @Composable
-fun Display(number: String, modifier: Modifier){
+fun Display(number: String, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
-        Image(painter = painterResource(id = R.drawable.rectangle_calc),
+        Image(
+            painter = painterResource(id = R.drawable.rectangle_calc),
             contentDescription = "numbers",
-            modifier = Modifier.fillMaxSize())
+            modifier = Modifier.fillMaxSize()
+        )
         Text(
             text = stringResource(R.string.backgroundText),
             style = MaterialTheme.typography.caption,
@@ -30,23 +32,25 @@ fun Display(number: String, modifier: Modifier){
                 .align(Alignment.CenterStart)
                 .padding(start = 22.dp, end = 22.dp)
                 .height(44.dp),
-            maxLines = 1)
+            maxLines = 1
+        )
         Text(
-            text = number,  style = MaterialTheme.typography.caption,
+            text = number, style = MaterialTheme.typography.caption,
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .padding(start = 22.dp, end = 22.dp)
                 .height(44.dp),
-            maxLines = 1)
+            maxLines = 1
+        )
     }
 }
 
 @Preview
 @Composable
-private fun displayCalcPreview() {
+private fun DisplayCalcPreview() {
     TaskCalculatorTheme {
         Surface(Modifier.width(366.dp)) {
-            Display(number = stringResource(id = R.string.button_zero), Modifier.height(100.dp).fillMaxWidth())
+            Display(number = stringResource(id = R.string.button_zero), Modifier.height(100.dp))
         }
     }
 }
